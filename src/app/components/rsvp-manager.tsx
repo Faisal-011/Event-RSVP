@@ -60,15 +60,16 @@ function NewRsvpForm() {
       const result = await createRsvp(values);
       if (result.success) {
         toast({
-          title: "RSVP Confirmed!",
-          description: "Thank you, your RSVP has been submitted successfully.",
+          title: "RSVP Submitted!",
+          description: "Thank you for confirming your attendance.",
         });
         form.reset();
       } else {
         toast({
           variant: "destructive",
           title: "Something went wrong",
-          description: result.error,
+          description:
+            result.error || "Failed to submit your RSVP. Please try again.",
         });
       }
     });
@@ -153,33 +154,14 @@ function FindRsvpForm() {
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-
-    if (!email) {
-      toast({
-        variant: "destructive",
-        title: "Email required",
-        description: "Please enter an email address to search.",
-      });
-      return;
-    }
-
     setIsSearching(true);
     setFoundRsvp(undefined);
-    try {
-      const result = await findRsvpByEmail(email);
-      setFoundRsvp(result);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Search Failed",
-        description: "An unexpected error occurred. Please try again.",
-      });
-      setFoundRsvp(null);
-    } finally {
-      setIsSearching(false);
-    }
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    
+    const rsvp = await findRsvpByEmail(email);
+    setFoundRsvp(rsvp);
+    setIsSearching(false);
   };
 
   return (
