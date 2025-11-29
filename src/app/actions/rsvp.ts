@@ -36,29 +36,7 @@ export async function createRsvp(
   }
 
   const { name, email, special_requests } = validatedFields.data;
-
-  // Check if an RSVP with this email already exists
-  const { data: existingRsvp, error: selectError } = await supabase
-    .from("rsvps")
-    .select("id")
-    .eq("email", email)
-    .maybeSingle();
-
-  if (selectError) {
-    console.error("Error checking for existing RSVP:", selectError);
-    return {
-      success: false,
-      error: "A database error occurred. Please try again later.",
-    };
-  }
   
-  if (existingRsvp) {
-     return {
-      success: false,
-      error: "An RSVP with this email address already exists. Please use the 'Find My RSVP' tab to view it.",
-    };
-  }
-
   // Insert new RSVP
   const { error: insertError } = await supabase.from("rsvps").insert({
     name,
@@ -68,6 +46,13 @@ export async function createRsvp(
 
   if (insertError) {
     console.error("Error inserting RSVP:", insertError);
+    // Check for unique constraint violation
+    if (insertError.code === '23505') {
+       return {
+        success: false,
+        error: "An RSVP with this email address already exists. Please use the 'Find My RSVP' tab to view it.",
+      };
+    }
     return {
       success: false,
       error: "Failed to submit your RSVP. Please try again.",
