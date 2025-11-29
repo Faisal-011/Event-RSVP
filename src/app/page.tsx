@@ -1,4 +1,5 @@
 import { RsvpManager } from "@/app/components/rsvp-manager";
+import { Copyright } from "@/app/components/copyright";
 import { Logo } from "@/components/icons";
 
 export default function Home() {
@@ -18,9 +19,7 @@ export default function Home() {
 
         <RsvpManager />
 
-        <footer className="mt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Eventide. All rights reserved.</p>
-        </footer>
+        <Copyright />
       </div>
     </main>
   );
