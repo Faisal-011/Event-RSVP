@@ -42,9 +42,9 @@ export async function createRsvp(
     .from("rsvps")
     .select("id")
     .eq("email", email)
-    .single();
+    .maybeSingle();
 
-  if (selectError && selectError.code !== 'PGRST116') { // PGRST116: "exact one row expected" (i.e., not found)
+  if (selectError) {
     console.error("Error checking for existing RSVP:", selectError);
     return {
       success: false,
