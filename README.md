@@ -52,3 +52,5 @@ In the project directory, you can run:
 - **Icons**: Simple, outline-style
 - **Layout**: Clean, whitespace-rich
 - **Animations**: Subtle transitions
+
+## Project Description
